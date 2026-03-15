@@ -14,8 +14,8 @@ def generate_launch_description():
         # 2. Start your custom Visualizer Node
         Node(
             package='px4_ros2_init',
-            executable='visualizer_node',
-            name='px4_visualizer',
+            executable='vehicle_odometry_rviz_node',
+            name='px4_vehicle_odometry_rviz',
             output='screen'
         )
     ])
