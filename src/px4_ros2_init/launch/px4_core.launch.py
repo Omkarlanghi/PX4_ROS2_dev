@@ -24,5 +24,13 @@ def generate_launch_description():
             executable='heartbeat_node',
             name='px4_heartbeat_node',
             output='screen'
+        ),
+
+        # 4. Start the Command Node in the ORIGINAL terminal
+        Node(
+            package='px4_ros2_init',
+            executable='command_node',
+            name='px4_command_node',
+            output='screen'
         )
     ])

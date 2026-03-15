@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+import math
+
 import rclpy
 from rclpy.node import Node
 from rclpy.qos import QoSProfile, ReliabilityPolicy, HistoryPolicy, DurabilityPolicy
@@ -93,18 +95,20 @@ class PX4Visualizer(Node):
         self.raw_marker_pub.publish(marker)
 
     def cmd_cb(self, msg):
-        # Only process if position data is valid (not NaN)
-        if not any(map(lambda x: x == float('nan'), msg.position)):
-            p_enu = [msg.position[1], msg.position[0], -msg.position[2]]
-            pose = self.create_pose_msg(p_enu, [0.0, 0.0, 0.0, 1.0])
-            self.cmd_pose_pub.publish(pose)
-            
-            self.cmd_path.poses.append(pose)
-            if len(self.cmd_path.poses) > 200: self.cmd_path.poses.pop(0)
+        # Ignore invalid setpoints so RViz does not draw misleading paths.
+        if not all(math.isfinite(x) for x in msg.position):
+            return
 
-            # Publish the Green Marker
-            marker = self.create_colored_line_marker(self.cmd_path, "cmd_px4", 0.0, 1.0, 0.0)
-            self.cmd_marker_pub.publish(marker)
+        p_enu = [msg.position[1], msg.position[0], -msg.position[2]]
+        pose = self.create_pose_msg(p_enu, [0.0, 0.0, 0.0, 1.0])
+        self.cmd_pose_pub.publish(pose)
+
+        self.cmd_path.poses.append(pose)
+        if len(self.cmd_path.poses) > 200: self.cmd_path.poses.pop(0)
+
+        # Publish the Green Marker
+        marker = self.create_colored_line_marker(self.cmd_path, "cmd_px4", 0.0, 1.0, 0.0)
+        self.cmd_marker_pub.publish(marker)
 
 def main(args=None):
     rclpy.init(args=args)

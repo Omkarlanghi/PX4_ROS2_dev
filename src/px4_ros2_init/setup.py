@@ -24,6 +24,7 @@ setup(
     entry_points={
         'console_scripts': [
             'heartbeat_node = px4_ros2_init.px4_heartbeat_node:main',
+            'command_node = px4_ros2_init.px4_command_node:main',
             'visualizer_node = px4_ros2_init.px4_visualizer_node:main',
             'vehicle_odometry_rviz_node = px4_ros2_init.px4_vehicle_odometry_rviz_node:main',
         ],

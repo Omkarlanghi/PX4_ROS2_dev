@@ -1,22 +1,30 @@
 #!/usr/bin/env python3
 import rclpy
 from rclpy.node import Node
+from rclpy.qos import QoSProfile, ReliabilityPolicy, HistoryPolicy, DurabilityPolicy
 from px4_msgs.msg import TrajectorySetpoint, VehicleCommand
 
 class PX4CommandNode(Node):
     def __init__(self):
         super().__init__('px4_command_node')
+
+        qos = QoSProfile(
+            reliability=ReliabilityPolicy.BEST_EFFORT,
+            durability=DurabilityPolicy.TRANSIENT_LOCAL,
+            history=HistoryPolicy.KEEP_LAST,
+            depth=1
+        )
         
         # Publishers
         self.setpoint_publisher = self.create_publisher(
             TrajectorySetpoint, 
             '/fmu/in/trajectory_setpoint', 
-            10)
+            qos)
             
         self.command_publisher = self.create_publisher(
             VehicleCommand, 
             '/fmu/in/vehicle_command', 
-            10)
+            qos)
 
         # 10Hz Timer
         self.timer = self.create_timer(0.1, self.timer_callback)
