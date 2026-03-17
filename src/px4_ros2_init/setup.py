@@ -1,6 +1,7 @@
-from setuptools import find_packages, setup
 import os
 from glob import glob
+
+from setuptools import find_packages, setup
 
 package_name = 'px4_ros2_init'
 
@@ -12,7 +13,6 @@ setup(
         ('share/ament_index/resource_index/packages',
             ['resource/' + package_name]),
         ('share/' + package_name, ['package.xml']),
-        # Updated to strictly look for .launch.py files
         (os.path.join('share', package_name, 'launch'), glob('launch/*.launch.py')),
     ],
     install_requires=['setuptools'],
@@ -24,9 +24,6 @@ setup(
     entry_points={
         'console_scripts': [
             'heartbeat_node = px4_ros2_init.px4_heartbeat_node:main',
-            'command_node = px4_ros2_init.px4_command_node:main',
-            'visualizer_node = px4_ros2_init.px4_visualizer_node:main',
-            'vehicle_odometry_rviz_node = px4_ros2_init.px4_vehicle_odometry_rviz_node:main',
         ],
     },
 )
