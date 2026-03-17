@@ -10,7 +10,7 @@ def generate_launch_description():
             output='screen'
         ),
         ExecuteProcess(
-            cmd=['bash', '-lc', 'cd ~/PX4-Autopilot && make px4_sitl gz_x500'],
+            cmd=['gnome-terminal', '--', 'bash', '-lc', 'cd ~/PX4-Autopilot && make px4_sitl gz_x500; exec bash'],
             name='px4_sitl',
             output='screen'
         ),
